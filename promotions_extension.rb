@@ -9,15 +9,24 @@ class PromotionsExtension < Spree::Extension
   # define_routes do |map|
   #   map.namespace :admin do |admin|
   #     admin.resources :whatever
-  #   end  
+  #   end
   # end
-  
+
   def activate
     # admin.tabs.add "Promotions", "/admin/promotions", :after => "Layouts", :visibility => [:all]
+    Product.class_eval do
+      before_update :delete_promotions
+
+      private
+        def delete_promotions
+          Promotions.destroy_all(:product_id => id) if deleted_at
+        end
+    end
   end
-  
+
   def deactivate
     # admin.tabs.remove "Promotions"
   end
-  
+
 end
+
