@@ -5,7 +5,7 @@ class Promotions < ActiveRecord::Base
     # randomize a small list, courtesy of
     # http://redcorundum.blogspot.com/2006/12/randomizing-array-and-other-faqs.html
     promos = n <= 0 ? [] : Promotions.find(:all).sort_by {rand}[0..n-1]
-    Product.all(:conditions => ["id IN (?)", promos.map {|p| p.product_id }], :include => :images)
+    Product.all(:conditions => ["id IN (?)", promos.map {|p| p.product_id }], :include => [:variants, :images])
   end
 
   def self.best_sellers(n, start = 1.week.ago, finish = Time.now)
